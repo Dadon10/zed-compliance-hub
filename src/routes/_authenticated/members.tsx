@@ -33,10 +33,15 @@ function MembersPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("company_members")
-        .select("id, role, user_id, created_at, profiles:user_id(email, full_name)")
+        .select("id, role, user_id, created_at")
         .eq("company_id", companyId);
       if (error) throw error;
-      return data ?? [];
+      const ids = (data ?? []).map((m) => m.user_id);
+      const { data: profiles } = ids.length
+        ? await supabase.from("profiles").select("id, email, full_name").in("id", ids)
+        : { data: [] };
+      const pMap = new Map((profiles ?? []).map((p) => [p.id, p]));
+      return (data ?? []).map((m) => ({ ...m, profile: pMap.get(m.user_id) }));
     },
   });
 
@@ -138,8 +143,8 @@ function MembersPage() {
                   <tbody>
                     {members.map((m) => (
                       <tr key={m.id} className="border-b border-border/50">
-                        <td className="px-6 py-3 font-medium">{m.profiles?.full_name ?? "—"}</td>
-                        <td className="px-6 py-3 text-foreground/60">{m.profiles?.email ?? "—"}</td>
+                        <td className="px-6 py-3 font-medium">{m.profile?.full_name ?? "—"}</td>
+                        <td className="px-6 py-3 text-foreground/60">{m.profile?.email ?? "—"}</td>
                         <td className="px-6 py-3">
                           <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-soft text-emerald-deep">{m.role}</span>
                         </td>
