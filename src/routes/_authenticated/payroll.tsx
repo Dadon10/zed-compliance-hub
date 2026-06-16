@@ -145,6 +145,14 @@ function PayrollPage() {
         metadata: { file_name: file.name, employee_count: computed.length, error_count: errorCount },
       });
 
+      await supabase.from("notifications").insert({
+        user_id: u.user.id,
+        company_id: companyId,
+        type: errorCount > 0 ? "warning" : "success",
+        title: errorCount > 0 ? `Payroll uploaded with ${errorCount} errors` : "Payroll validated successfully",
+        message: `${file.name} · ${computed.length} employees · period ${period.month}/${period.year}`,
+      });
+
       return { id: upload.id, errorCount, total: computed.length };
     },
     onSuccess: (r) => {
@@ -152,6 +160,7 @@ function PayrollPage() {
       qc.invalidateQueries({ queryKey: ["uploads"] });
       qc.invalidateQueries({ queryKey: ["recent-uploads"] });
       qc.invalidateQueries({ queryKey: ["recent-subs"] });
+      qc.invalidateQueries({ queryKey: ["notifications-unread"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Upload failed"),
     onSettled: () => setBusy(false),
