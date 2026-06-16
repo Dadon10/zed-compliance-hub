@@ -15,6 +15,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSubmissionsRouteImport } from './routes/_authenticated/submissions'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedPayrollRouteImport } from './routes/_authenticated/payroll'
+import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
+import { Route as AuthenticatedMembersRouteImport } from './routes/_authenticated/members'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCompaniesRouteImport } from './routes/_authenticated/companies'
 import { Route as AuthenticatedAuditRouteImport } from './routes/_authenticated/audit'
@@ -51,6 +53,17 @@ const AuthenticatedPayrollRoute = AuthenticatedPayrollRouteImport.update({
   path: '/payroll',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedNotificationsRoute =
+  AuthenticatedNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMembersRoute = AuthenticatedMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -85,6 +98,8 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuthenticatedAuditRoute
   '/companies': typeof AuthenticatedCompaniesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/members': typeof AuthenticatedMembersRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
   '/payroll': typeof AuthenticatedPayrollRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
   '/submissions': typeof AuthenticatedSubmissionsRoute
@@ -97,6 +112,8 @@ export interface FileRoutesByTo {
   '/audit': typeof AuthenticatedAuditRoute
   '/companies': typeof AuthenticatedCompaniesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/members': typeof AuthenticatedMembersRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
   '/payroll': typeof AuthenticatedPayrollRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
   '/submissions': typeof AuthenticatedSubmissionsRoute
@@ -111,6 +128,8 @@ export interface FileRoutesById {
   '/_authenticated/audit': typeof AuthenticatedAuditRoute
   '/_authenticated/companies': typeof AuthenticatedCompaniesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/members': typeof AuthenticatedMembersRoute
+  '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/payroll': typeof AuthenticatedPayrollRouteWithChildren
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/submissions': typeof AuthenticatedSubmissionsRoute
@@ -125,6 +144,8 @@ export interface FileRouteTypes {
     | '/audit'
     | '/companies'
     | '/dashboard'
+    | '/members'
+    | '/notifications'
     | '/payroll'
     | '/reports'
     | '/submissions'
@@ -137,6 +158,8 @@ export interface FileRouteTypes {
     | '/audit'
     | '/companies'
     | '/dashboard'
+    | '/members'
+    | '/notifications'
     | '/payroll'
     | '/reports'
     | '/submissions'
@@ -150,6 +173,8 @@ export interface FileRouteTypes {
     | '/_authenticated/audit'
     | '/_authenticated/companies'
     | '/_authenticated/dashboard'
+    | '/_authenticated/members'
+    | '/_authenticated/notifications'
     | '/_authenticated/payroll'
     | '/_authenticated/reports'
     | '/_authenticated/submissions'
@@ -206,6 +231,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPayrollRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/notifications': {
+      id: '/_authenticated/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/members': {
+      id: '/_authenticated/members'
+      path: '/members'
+      fullPath: '/members'
+      preLoaderRoute: typeof AuthenticatedMembersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -260,6 +299,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAuditRoute: typeof AuthenticatedAuditRoute
   AuthenticatedCompaniesRoute: typeof AuthenticatedCompaniesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMembersRoute: typeof AuthenticatedMembersRoute
+  AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedPayrollRoute: typeof AuthenticatedPayrollRouteWithChildren
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSubmissionsRoute: typeof AuthenticatedSubmissionsRoute
@@ -270,6 +311,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAuditRoute: AuthenticatedAuditRoute,
   AuthenticatedCompaniesRoute: AuthenticatedCompaniesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMembersRoute: AuthenticatedMembersRoute,
+  AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedPayrollRoute: AuthenticatedPayrollRouteWithChildren,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSubmissionsRoute: AuthenticatedSubmissionsRoute,

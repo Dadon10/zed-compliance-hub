@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, AlertTriangle, CheckCircle2, Download } from "lucide-react";
+import { buildScheduleCsv, downloadCsv } from "@/lib/schedules";
 
 export const Route = createFileRoute("/_authenticated/payroll/$uploadId")({
   component: UploadDetail,
@@ -30,6 +31,13 @@ function UploadDetail() {
 
   const errorRecords = records?.filter((r) => Array.isArray(r.errors) && r.errors.length > 0) ?? [];
 
+  function exportFor(body: "NAPSA" | "PAYE" | "NHIMA" | "WCFCB") {
+    if (!records?.length || !upload) return;
+    const csv = buildScheduleCsv(body, records);
+    const period = `${upload.period_year}-${String(upload.period_month).padStart(2, "0")}`;
+    downloadCsv(`${body}-schedule-${period}.csv`, csv);
+  }
+
   return (
     <div>
       <header className="h-16 border-b flex items-center justify-between px-8">
@@ -52,6 +60,18 @@ function UploadDetail() {
             <Stat label="WCFCB" value={fmt(upload.total_wcfcb)} />
           </div>
         )}
+
+        <section className="border rounded-xl p-6">
+          <h2 className="text-sm font-bold mb-3">Export statutory schedules</h2>
+          <p className="text-xs text-foreground/50 mb-4">Download filing-ready CSV schedules for each regulator.</p>
+          <div className="flex flex-wrap gap-2">
+            {(["NAPSA", "PAYE", "NHIMA", "WCFCB"] as const).map((b) => (
+              <button key={b} onClick={() => exportFor(b)} className="px-3 py-2 border rounded-[4px] text-xs font-mono uppercase hover:bg-muted inline-flex items-center gap-2">
+                <Download className="size-3" /> {b} schedule
+              </button>
+            ))}
+          </div>
+        </section>
 
         {errorRecords.length > 0 && (
           <section className="border border-destructive/30 bg-destructive/5 rounded-xl p-6">

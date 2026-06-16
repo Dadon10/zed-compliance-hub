@@ -1,8 +1,8 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Building2, Upload, FileCheck2, Send, BarChart3, ScrollText, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Building2, Upload, Send, BarChart3, ScrollText, Settings, LogOut, Bell, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 
 const NAV = [
@@ -11,6 +11,8 @@ const NAV = [
   { to: "/payroll", label: "Payroll Uploads", icon: Upload },
   { to: "/submissions", label: "Submissions", icon: Send },
   { to: "/reports", label: "Reports", icon: BarChart3 },
+  { to: "/notifications", label: "Notifications", icon: Bell },
+  { to: "/members", label: "Team Members", icon: Users },
   { to: "/audit", label: "Audit Logs", icon: ScrollText },
   { to: "/admin", label: "Admin", icon: Settings },
 ] as const;
@@ -19,6 +21,15 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const qc = useQueryClient();
+
+  const { data: unread } = useQuery({
+    queryKey: ["notifications-unread"],
+    queryFn: async () => {
+      const { count } = await supabase.from("notifications").select("id", { count: "exact", head: true }).eq("read", false);
+      return count ?? 0;
+    },
+    refetchInterval: 30000,
+  });
 
   async function signOut() {
     await qc.cancelQueries();
@@ -38,6 +49,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <nav className="flex-1 p-3 flex flex-col gap-0.5">
           {NAV.map(({ to, label, icon: Icon }) => {
             const active = pathname === to || pathname.startsWith(to + "/");
+            const showBadge = to === "/notifications" && (unread ?? 0) > 0;
             return (
               <Link
                 key={to}
@@ -47,7 +59,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                 }`}
               >
                 <Icon className="size-4" />
-                {label}
+                <span className="flex-1">{label}</span>
+                {showBadge && <span className="text-[10px] font-mono bg-copper text-white px-1.5 py-0.5 rounded">{unread}</span>}
               </Link>
             );
           })}
