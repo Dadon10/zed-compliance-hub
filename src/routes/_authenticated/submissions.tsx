@@ -174,6 +174,24 @@ function SubmissionsPage() {
                         <button onClick={() => setRejectFor(s)} className="text-xs font-medium text-destructive hover:underline">Reject</button>
                       )}
                       {s.status === "submitted" && <span className="text-xs text-foreground/40 font-mono">{s.reference}</span>}
+                      {(s.status === "approved" || s.status === "submitted") && (
+                        <button
+                          onClick={() => downloadSubmissionPdf({
+                            companyName: s.companies?.name ?? "Company",
+                            tpin: s.companies?.tpin,
+                            body: s.body,
+                            periodMonth: s.period_month,
+                            periodYear: s.period_year,
+                            amount: Number(s.amount),
+                            reference: s.reference,
+                            status: s.status,
+                            submittedAt: s.submitted_at,
+                          })}
+                          className="text-xs font-medium text-foreground/70 hover:text-foreground hover:underline inline-flex items-center gap-1"
+                        >
+                          <FileDown className="size-3" /> PDF
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
