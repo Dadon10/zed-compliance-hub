@@ -61,7 +61,7 @@ function SubmissionsPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("submissions")
-        .select("*, companies(name)")
+        .select("*, companies(name, tpin)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as Sub[];
