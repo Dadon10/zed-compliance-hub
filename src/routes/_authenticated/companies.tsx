@@ -63,14 +63,22 @@ function CompaniesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {companies.map((c) => (
-              <div key={c.id} className="p-5 border rounded-xl hover:border-emerald-deep/40 transition-colors">
-                <div className="size-8 bg-emerald-soft text-emerald-deep grid place-items-center rounded mb-4">
-                  <Building2 className="size-4" />
+              <Link
+                key={c.id}
+                to="/companies/$companyId"
+                params={{ companyId: c.id }}
+                className="p-5 border rounded-xl hover:border-emerald-deep/40 hover:shadow-sm transition-all group block"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="size-8 bg-emerald-soft text-emerald-deep grid place-items-center rounded">
+                    <Building2 className="size-4" />
+                  </div>
+                  <ArrowRight className="size-4 text-foreground/30 group-hover:text-emerald-deep transition-colors" />
                 </div>
                 <h3 className="font-bold tracking-tight mb-1">{c.name}</h3>
                 <p className="text-xs text-foreground/40 font-mono">TPIN: {c.tpin || "—"}</p>
                 {c.industry && <p className="text-xs text-foreground/60 mt-2">{c.industry}</p>}
-              </div>
+              </Link>
             ))}
           </div>
         )}
