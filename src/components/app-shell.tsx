@@ -3,6 +3,7 @@ import { LayoutDashboard, Building2, Upload, Send, BarChart3, ScrollText, Settin
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import type { ReactNode } from "react";
 
 const NAV = [
@@ -28,8 +29,40 @@ export function AppShell({ children }: { children: ReactNode }) {
       const { count } = await supabase.from("notifications").select("id", { count: "exact", head: true }).eq("read", false);
       return count ?? 0;
     },
-    refetchInterval: 30000,
   });
+
+  // Realtime: listen for new notifications scoped to the current user
+  useEffect(() => {
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      const uid = data.user?.id;
+      if (!uid) return;
+      channel = supabase
+        .channel(`notifications:${uid}`)
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${uid}` },
+          (payload) => {
+            const n = payload.new as { title: string; message: string | null };
+            toast(n.title, { description: n.message ?? undefined });
+            qc.invalidateQueries({ queryKey: ["notifications-unread"] });
+            qc.invalidateQueries({ queryKey: ["notifications"] });
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "UPDATE", schema: "public", table: "notifications", filter: `user_id=eq.${uid}` },
+          () => {
+            qc.invalidateQueries({ queryKey: ["notifications-unread"] });
+          },
+        )
+        .subscribe();
+    })();
+    return () => {
+      if (channel) supabase.removeChannel(channel);
+    };
+  }, [qc]);
 
   async function signOut() {
     await qc.cancelQueries();
