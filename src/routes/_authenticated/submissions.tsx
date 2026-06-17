@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Send, CheckCircle2, Clock, XCircle, Loader2 } from "lucide-react";
+import { Send, CheckCircle2, Clock, XCircle, Loader2, FileDown } from "lucide-react";
 import { useState } from "react";
+import { downloadSubmissionPdf } from "@/lib/submission-pdf";
 
 export const Route = createFileRoute("/_authenticated/submissions")({
   component: SubmissionsPage,
