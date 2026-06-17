@@ -23,6 +23,7 @@ import { Route as AuthenticatedAuditRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPayrollUploadIdRouteImport } from './routes/_authenticated/payroll.$uploadId'
 import { Route as AuthenticatedCompaniesCompanyIdRouteImport } from './routes/_authenticated/companies.$companyId'
+import { Route as ApiPublicHooksDeadlineRemindersRouteImport } from './routes/api/public/hooks/deadline-reminders'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -97,6 +98,12 @@ const AuthenticatedCompaniesCompanyIdRoute =
     path: '/$companyId',
     getParentRoute: () => AuthenticatedCompaniesRoute,
   } as any)
+const ApiPublicHooksDeadlineRemindersRoute =
+  ApiPublicHooksDeadlineRemindersRouteImport.update({
+    id: '/api/public/hooks/deadline-reminders',
+    path: '/api/public/hooks/deadline-reminders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/submissions': typeof AuthenticatedSubmissionsRoute
   '/companies/$companyId': typeof AuthenticatedCompaniesCompanyIdRoute
   '/payroll/$uploadId': typeof AuthenticatedPayrollUploadIdRoute
+  '/api/public/hooks/deadline-reminders': typeof ApiPublicHooksDeadlineRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -127,6 +135,7 @@ export interface FileRoutesByTo {
   '/submissions': typeof AuthenticatedSubmissionsRoute
   '/companies/$companyId': typeof AuthenticatedCompaniesCompanyIdRoute
   '/payroll/$uploadId': typeof AuthenticatedPayrollUploadIdRoute
+  '/api/public/hooks/deadline-reminders': typeof ApiPublicHooksDeadlineRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -144,6 +153,7 @@ export interface FileRoutesById {
   '/_authenticated/submissions': typeof AuthenticatedSubmissionsRoute
   '/_authenticated/companies/$companyId': typeof AuthenticatedCompaniesCompanyIdRoute
   '/_authenticated/payroll/$uploadId': typeof AuthenticatedPayrollUploadIdRoute
+  '/api/public/hooks/deadline-reminders': typeof ApiPublicHooksDeadlineRemindersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/submissions'
     | '/companies/$companyId'
     | '/payroll/$uploadId'
+    | '/api/public/hooks/deadline-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/submissions'
     | '/companies/$companyId'
     | '/payroll/$uploadId'
+    | '/api/public/hooks/deadline-reminders'
   id:
     | '__root__'
     | '/'
@@ -192,12 +204,14 @@ export interface FileRouteTypes {
     | '/_authenticated/submissions'
     | '/_authenticated/companies/$companyId'
     | '/_authenticated/payroll/$uploadId'
+    | '/api/public/hooks/deadline-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiPublicHooksDeadlineRemindersRoute: typeof ApiPublicHooksDeadlineRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -300,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCompaniesCompanyIdRouteImport
       parentRoute: typeof AuthenticatedCompaniesRoute
     }
+    '/api/public/hooks/deadline-reminders': {
+      id: '/api/public/hooks/deadline-reminders'
+      path: '/api/public/hooks/deadline-reminders'
+      fullPath: '/api/public/hooks/deadline-reminders'
+      preLoaderRoute: typeof ApiPublicHooksDeadlineRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -359,6 +380,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiPublicHooksDeadlineRemindersRoute: ApiPublicHooksDeadlineRemindersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
