@@ -367,6 +367,7 @@ export type Database = {
           period_month: number
           period_year: number
           reference: string | null
+          rejection_reason: string | null
           status: Database["public"]["Enums"]["submission_status"]
           submitted_at: string | null
           submitted_by: string | null
@@ -383,6 +384,7 @@ export type Database = {
           period_month: number
           period_year: number
           reference?: string | null
+          rejection_reason?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
           submitted_at?: string | null
           submitted_by?: string | null
@@ -399,6 +401,7 @@ export type Database = {
           period_month?: number
           period_year?: number
           reference?: string | null
+          rejection_reason?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
           submitted_at?: string | null
           submitted_by?: string | null

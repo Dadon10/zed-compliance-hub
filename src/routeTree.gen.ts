@@ -22,6 +22,8 @@ import { Route as AuthenticatedCompaniesRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAuditRouteImport } from './routes/_authenticated/audit'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPayrollUploadIdRouteImport } from './routes/_authenticated/payroll.$uploadId'
+import { Route as AuthenticatedCompaniesCompanyIdRouteImport } from './routes/_authenticated/companies.$companyId'
+import { Route as ApiPublicHooksDeadlineRemindersRouteImport } from './routes/api/public/hooks/deadline-reminders'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -90,34 +92,50 @@ const AuthenticatedPayrollUploadIdRoute =
     path: '/$uploadId',
     getParentRoute: () => AuthenticatedPayrollRoute,
   } as any)
+const AuthenticatedCompaniesCompanyIdRoute =
+  AuthenticatedCompaniesCompanyIdRouteImport.update({
+    id: '/$companyId',
+    path: '/$companyId',
+    getParentRoute: () => AuthenticatedCompaniesRoute,
+  } as any)
+const ApiPublicHooksDeadlineRemindersRoute =
+  ApiPublicHooksDeadlineRemindersRouteImport.update({
+    id: '/api/public/hooks/deadline-reminders',
+    path: '/api/public/hooks/deadline-reminders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/audit': typeof AuthenticatedAuditRoute
-  '/companies': typeof AuthenticatedCompaniesRoute
+  '/companies': typeof AuthenticatedCompaniesRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/members': typeof AuthenticatedMembersRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/payroll': typeof AuthenticatedPayrollRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
   '/submissions': typeof AuthenticatedSubmissionsRoute
+  '/companies/$companyId': typeof AuthenticatedCompaniesCompanyIdRoute
   '/payroll/$uploadId': typeof AuthenticatedPayrollUploadIdRoute
+  '/api/public/hooks/deadline-reminders': typeof ApiPublicHooksDeadlineRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/audit': typeof AuthenticatedAuditRoute
-  '/companies': typeof AuthenticatedCompaniesRoute
+  '/companies': typeof AuthenticatedCompaniesRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/members': typeof AuthenticatedMembersRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/payroll': typeof AuthenticatedPayrollRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
   '/submissions': typeof AuthenticatedSubmissionsRoute
+  '/companies/$companyId': typeof AuthenticatedCompaniesCompanyIdRoute
   '/payroll/$uploadId': typeof AuthenticatedPayrollUploadIdRoute
+  '/api/public/hooks/deadline-reminders': typeof ApiPublicHooksDeadlineRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -126,14 +144,16 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/audit': typeof AuthenticatedAuditRoute
-  '/_authenticated/companies': typeof AuthenticatedCompaniesRoute
+  '/_authenticated/companies': typeof AuthenticatedCompaniesRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/members': typeof AuthenticatedMembersRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/payroll': typeof AuthenticatedPayrollRouteWithChildren
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/submissions': typeof AuthenticatedSubmissionsRoute
+  '/_authenticated/companies/$companyId': typeof AuthenticatedCompaniesCompanyIdRoute
   '/_authenticated/payroll/$uploadId': typeof AuthenticatedPayrollUploadIdRoute
+  '/api/public/hooks/deadline-reminders': typeof ApiPublicHooksDeadlineRemindersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -149,7 +169,9 @@ export interface FileRouteTypes {
     | '/payroll'
     | '/reports'
     | '/submissions'
+    | '/companies/$companyId'
     | '/payroll/$uploadId'
+    | '/api/public/hooks/deadline-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -163,7 +185,9 @@ export interface FileRouteTypes {
     | '/payroll'
     | '/reports'
     | '/submissions'
+    | '/companies/$companyId'
     | '/payroll/$uploadId'
+    | '/api/public/hooks/deadline-reminders'
   id:
     | '__root__'
     | '/'
@@ -178,13 +202,16 @@ export interface FileRouteTypes {
     | '/_authenticated/payroll'
     | '/_authenticated/reports'
     | '/_authenticated/submissions'
+    | '/_authenticated/companies/$companyId'
     | '/_authenticated/payroll/$uploadId'
+    | '/api/public/hooks/deadline-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiPublicHooksDeadlineRemindersRoute: typeof ApiPublicHooksDeadlineRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -280,8 +307,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPayrollUploadIdRouteImport
       parentRoute: typeof AuthenticatedPayrollRoute
     }
+    '/_authenticated/companies/$companyId': {
+      id: '/_authenticated/companies/$companyId'
+      path: '/$companyId'
+      fullPath: '/companies/$companyId'
+      preLoaderRoute: typeof AuthenticatedCompaniesCompanyIdRouteImport
+      parentRoute: typeof AuthenticatedCompaniesRoute
+    }
+    '/api/public/hooks/deadline-reminders': {
+      id: '/api/public/hooks/deadline-reminders'
+      path: '/api/public/hooks/deadline-reminders'
+      fullPath: '/api/public/hooks/deadline-reminders'
+      preLoaderRoute: typeof ApiPublicHooksDeadlineRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface AuthenticatedCompaniesRouteChildren {
+  AuthenticatedCompaniesCompanyIdRoute: typeof AuthenticatedCompaniesCompanyIdRoute
+}
+
+const AuthenticatedCompaniesRouteChildren: AuthenticatedCompaniesRouteChildren =
+  {
+    AuthenticatedCompaniesCompanyIdRoute: AuthenticatedCompaniesCompanyIdRoute,
+  }
+
+const AuthenticatedCompaniesRouteWithChildren =
+  AuthenticatedCompaniesRoute._addFileChildren(
+    AuthenticatedCompaniesRouteChildren,
+  )
 
 interface AuthenticatedPayrollRouteChildren {
   AuthenticatedPayrollUploadIdRoute: typeof AuthenticatedPayrollUploadIdRoute
@@ -297,7 +352,7 @@ const AuthenticatedPayrollRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAuditRoute: typeof AuthenticatedAuditRoute
-  AuthenticatedCompaniesRoute: typeof AuthenticatedCompaniesRoute
+  AuthenticatedCompaniesRoute: typeof AuthenticatedCompaniesRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMembersRoute: typeof AuthenticatedMembersRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
@@ -309,7 +364,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedAuditRoute: AuthenticatedAuditRoute,
-  AuthenticatedCompaniesRoute: AuthenticatedCompaniesRoute,
+  AuthenticatedCompaniesRoute: AuthenticatedCompaniesRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMembersRoute: AuthenticatedMembersRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
@@ -325,17 +380,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiPublicHooksDeadlineRemindersRoute: ApiPublicHooksDeadlineRemindersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
