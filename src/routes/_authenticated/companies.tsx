@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Building2, Plus, Loader2 } from "lucide-react";
+import { Building2, Plus, Loader2, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/companies")({
   component: CompaniesPage,
