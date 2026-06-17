@@ -21,7 +21,8 @@ type Sub = {
   due_date: string | null;
   reference: string | null;
   rejection_reason: string | null;
-  companies?: { name: string } | null;
+  submitted_at: string | null;
+  companies?: { name: string; tpin?: string | null } | null;
 };
 
 async function hasRole(companyId: string, roles: ("admin" | "finance" | "compliance")[]) {
