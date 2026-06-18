@@ -429,6 +429,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      find_user_id_by_email: { Args: { _email: string }; Returns: string }
       has_company_role: {
         Args: {
           _company: string

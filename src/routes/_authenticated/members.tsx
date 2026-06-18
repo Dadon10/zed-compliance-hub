@@ -48,16 +48,13 @@ function MembersPage() {
   const add = useMutation({
     mutationFn: async () => {
       if (!companyId || !email) throw new Error("Company and email required");
-      const { data: profile, error: pErr } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("email", email.trim().toLowerCase())
-        .maybeSingle();
+      const { data: userId, error: pErr } = await supabase
+        .rpc("find_user_id_by_email", { _email: email.trim().toLowerCase() });
       if (pErr) throw pErr;
-      if (!profile) throw new Error("No user with that email — they must sign up first");
+      if (!userId) throw new Error("No user with that email — they must sign up first");
       const { error } = await supabase.from("company_members").insert({
         company_id: companyId,
-        user_id: profile.id,
+        user_id: userId as string,
         role,
       });
       if (error) throw error;
