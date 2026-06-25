@@ -1,0 +1,4 @@
+# Allow-listed Supabase linter rule names. One per line. Comments start with #.
+# Add an entry only with a justification comment above it.
+# Format: either a bare rule name (e.g. `security_definer_view`) or
+# `rule_name:schema.object` to scope the exception to a single object.
