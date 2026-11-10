@@ -27,7 +27,7 @@ export interface PayrollComputed extends Required<Omit<PayrollInput, "employee_i
 
 // NAPSA: 5% employee contribution, capped at ZMW 1,221.80/month (2024 ceiling)
 const NAPSA_RATE = 0.05;
-const NAPSA_CEILING = 1221.8;
+const NAPSA_CEILING = 1861.8;
 
 // NHIMA: 1% of basic salary (employee share)
 const NHIMA_RATE = 0.01;
